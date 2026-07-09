@@ -1,200 +1,269 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>特休 / 請假管理系統</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: "Microsoft JhengHei", Arial, sans-serif;
-      background: #f4f7fb;
-      color: #222;
-    }
-
-    header {
-      background: linear-gradient(135deg, #1976d2, #0d47a1);
-      color: white;
-      text-align: center;
-      padding: 70px 20px;
-    }
-
-    header h1 {
-      font-size: 42px;
-      margin-bottom: 15px;
-    }
-
-    header p {
-      font-size: 20px;
-      margin-bottom: 30px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 13px 26px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      margin: 6px;
-    }
-
-    .btn-download {
-      background: #fff;
-      color: #1976d2;
-    }
-
-    .btn-github {
-      background: #222;
-      color: #fff;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 14px;
-      padding: 30px;
-      margin-bottom: 28px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-    }
-
-    h2 {
-      margin-top: 0;
-      color: #0d47a1;
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-    }
-
-    .feature {
-      background: #eef5ff;
-      padding: 18px;
-      border-radius: 10px;
-      font-weight: bold;
-    }
-
-    pre {
-      background: #111827;
-      color: #e5e7eb;
-      padding: 18px;
-      border-radius: 10px;
-      overflow-x: auto;
-      font-size: 15px;
-    }
-
-    .screenshots {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 18px;
-    }
-
-    .shot {
-      border: 2px dashed #bbb;
-      border-radius: 12px;
-      height: 190px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #777;
-      background: #fafafa;
-    }
-
-    footer {
-      text-align: center;
-      color: #777;
-      padding: 30px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>特休 / 請假管理系統</title>
+<style>
+body{font-family:"Microsoft JhengHei",Arial;background:#f4f7fb;margin:0;color:#222}
+header{background:#1976d2;color:white;padding:30px;text-align:center}
+.container{max-width:1200px;margin:25px auto;padding:0 20px}
+.card{background:white;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 3px 12px #0002}
+input,select,button{padding:8px;margin:4px}
+button{background:#1976d2;color:white;border:0;border-radius:5px;cursor:pointer}
+button.danger{background:#c62828}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th{background:#1976d2;color:white}
+th,td{border:1px solid #ddd;padding:8px;text-align:center}
+</style>
 </head>
-
 <body>
 
 <header>
-  <h1>特休 / 請假管理系統</h1>
-  <p>Python + PySide6 + SQLite 桌面版系統</p>
-
-  <a class="btn btn-download" href="leave_gui_fixed.py" download>下載 Python 程式</a>
-  <a class="btn btn-github" href="https://github.com/yuyao62/leave-system" target="_blank">查看 GitHub</a>
+<h1>特休 / 請假管理系統</h1>
+<p>GitHub Pages 網頁版，可直接使用</p>
 </header>
 
 <div class="container">
 
-  <section class="card">
-    <h2>系統特色</h2>
-    <div class="features">
-      <div class="feature">員工資料管理</div>
-      <div class="feature">特休自動計算</div>
-      <div class="feature">請假紀錄 Key in</div>
-      <div class="feature">已休 / 剩餘統計</div>
-      <div class="feature">SQLite 本機資料庫</div>
-      <div class="feature">Windows 視窗版介面</div>
-    </div>
-  </section>
+<div class="card">
+<h2>員工資料</h2>
+<input id="empNo" placeholder="員工編號">
+<input id="empName" placeholder="姓名">
+<label>到職日</label>
+<input id="hireDate" type="date">
+<button onclick="saveEmployee()">新增 / 更新員工</button>
 
-  <section class="card">
-    <h2>下載與執行方式</h2>
+<table>
+<thead>
+<tr><th>員編</th><th>姓名</th><th>到職日</th><th>操作</th></tr>
+</thead>
+<tbody id="empTable"></tbody>
+</table>
+</div>
 
-    <p>第一次使用請先安裝 PySide6：</p>
+<div class="card">
+<h2>請假 Key in</h2>
+<select id="leaveEmp"></select>
+<input id="leaveDate" type="date">
+<select id="leaveType">
+<option>特休</option>
+<option>補休</option>
+<option>病假</option>
+<option>事假</option>
+<option>家庭照顧假</option>
+<option>喪假</option>
+<option>婚假</option>
+<option>公假</option>
+<option>其他</option>
+</select>
+<input id="leaveHours" type="number" step="0.5" value="8">
+<input id="leaveNote" placeholder="備註">
+<button onclick="addLeave()">新增請假</button>
+</div>
 
-    <pre>pip install PySide6</pre>
+<div class="card">
+<h2>年度統計</h2>
+<label>年度</label>
+<input id="year" type="number" value="2026" onchange="renderAll()">
+<table>
+<thead>
+<tr>
+<th>員編</th><th>姓名</th><th>到職日</th><th>給假</th>
+<th>給假時數</th><th>已休特休</th><th>剩餘特休</th><th>總請假</th>
+</tr>
+</thead>
+<tbody id="summaryTable"></tbody>
+</table>
+</div>
 
-    <p>下載程式後，在 CMD 執行：</p>
-
-    <pre>python leave_gui_fixed.py</pre>
-
-    <p>資料會自動儲存在同資料夾的：</p>
-
-    <pre>leave_system.db</pre>
-  </section>
-
-  <section class="card">
-    <h2>專案檔案建議放法</h2>
-
-    <pre>leave-system/
-├── index.html
-├── leave_gui_fixed.py
-├── README.md
-├── requirements.txt
-└── screenshots/
-    ├── main.png
-    ├── employee.png
-    └── summary.png</pre>
-  </section>
-
-  <section class="card">
-    <h2>畫面截圖</h2>
-
-    <div class="screenshots">
-      <div class="shot">請放 screenshots/main.png</div>
-      <div class="shot">請放 screenshots/employee.png</div>
-      <div class="shot">請放 screenshots/summary.png</div>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>後續規劃</h2>
-    <ul>
-      <li>Excel 匯出</li>
-      <li>Excel 匯入員工資料</li>
-      <li>特休到期提醒</li>
-      <li>補休管理</li>
-      <li>報表列印</li>
-      <li>打包成 EXE</li>
-    </ul>
-  </section>
+<div class="card">
+<h2>請假明細</h2>
+<table>
+<thead>
+<tr><th>日期</th><th>員工</th><th>假別</th><th>時數</th><th>備註</th><th>操作</th></tr>
+</thead>
+<tbody id="leaveTable"></tbody>
+</table>
+</div>
 
 </div>
 
-<footer>
-  © 2026 Leave Management System
-</footer>
+<script>
+let employees = JSON.parse(localStorage.getItem("employees") || "[]");
+let leaves = JSON.parse(localStorage.getItem("leaves") || "[]");
+
+document.getElementById("hireDate").valueAsDate = new Date();
+document.getElementById("leaveDate").valueAsDate = new Date();
+
+function saveData(){
+  localStorage.setItem("employees", JSON.stringify(employees));
+  localStorage.setItem("leaves", JSON.stringify(leaves));
+}
+
+function annualDays(hireDate, year){
+  const hire = new Date(hireDate);
+  const target = new Date(year,0,1);
+  let y = target.getFullYear() - hire.getFullYear();
+  if(target.getMonth() < hire.getMonth() ||
+    (target.getMonth() === hire.getMonth() && target.getDate() < hire.getDate())) y--;
+
+  if(y < 0) return 0;
+  if(y < 1) return 3;
+  if(y < 2) return 7;
+  if(y < 3) return 10;
+  if(y < 5) return 14;
+  if(y < 10) return 15;
+  return Math.min(30, 15 + (y - 10));
+}
+
+function saveEmployee(){
+  const empNo = empNoInput();
+  const name = document.getElementById("empName").value.trim();
+  const hire = document.getElementById("hireDate").value;
+
+  if(!empNo || !name || !hire){
+    alert("請輸入員編、姓名、到職日");
+    return;
+  }
+
+  const idx = employees.findIndex(e => e.empNo === empNo);
+  const data = {empNo, name, hire};
+  if(idx >= 0) employees[idx] = data;
+  else employees.push(data);
+
+  saveData();
+  renderAll();
+}
+
+function empNoInput(){
+  return document.getElementById("empNo").value.trim();
+}
+
+function deleteEmployee(empNo){
+  if(!confirm("確定刪除員工？請假紀錄也會刪除。")) return;
+  employees = employees.filter(e => e.empNo !== empNo);
+  leaves = leaves.filter(l => l.empNo !== empNo);
+  saveData();
+  renderAll();
+}
+
+function addLeave(){
+  const empNo = document.getElementById("leaveEmp").value;
+  const date = document.getElementById("leaveDate").value;
+  const type = document.getElementById("leaveType").value;
+  const hours = parseFloat(document.getElementById("leaveHours").value || 0);
+  const note = document.getElementById("leaveNote").value.trim();
+
+  if(!empNo || !date || hours <= 0){
+    alert("請選員工、日期、時數");
+    return;
+  }
+
+  leaves.push({id:Date.now(), empNo, date, type, hours, note});
+  document.getElementById("leaveNote").value = "";
+  saveData();
+  renderAll();
+}
+
+function deleteLeave(id){
+  leaves = leaves.filter(l => l.id !== id);
+  saveData();
+  renderAll();
+}
+
+function renderAll(){
+  renderEmployees();
+  renderLeaveSelect();
+  renderSummary();
+  renderLeaves();
+}
+
+function renderEmployees(){
+  const tbody = document.getElementById("empTable");
+  tbody.innerHTML = "";
+
+  employees.forEach(e=>{
+    tbody.innerHTML += `
+      <tr>
+        <td>${e.empNo}</td>
+        <td>${e.name}</td>
+        <td>${e.hire}</td>
+        <td>
+          <button onclick="editEmployee('${e.empNo}')">編輯</button>
+          <button class="danger" onclick="deleteEmployee('${e.empNo}')">刪除</button>
+        </td>
+      </tr>`;
+  });
+}
+
+function editEmployee(empNo){
+  const e = employees.find(x=>x.empNo===empNo);
+  if(!e) return;
+  document.getElementById("empNo").value = e.empNo;
+  document.getElementById("empName").value = e.name;
+  document.getElementById("hireDate").value = e.hire;
+}
+
+function renderLeaveSelect(){
+  const sel = document.getElementById("leaveEmp");
+  sel.innerHTML = "";
+  employees.forEach(e=>{
+    sel.innerHTML += `<option value="${e.empNo}">${e.empNo} - ${e.name}</option>`;
+  });
+}
+
+function renderSummary(){
+  const year = parseInt(document.getElementById("year").value);
+  const tbody = document.getElementById("summaryTable");
+  tbody.innerHTML = "";
+
+  employees.forEach(e=>{
+    const days = annualDays(e.hire, year);
+    const total = days * 8;
+
+    const yearLeaves = leaves.filter(l=>l.empNo===e.empNo && l.date.startsWith(year));
+    const usedSpecial = yearLeaves.filter(l=>l.type==="特休").reduce((s,l)=>s+l.hours,0);
+    const totalUsed = yearLeaves.reduce((s,l)=>s+l.hours,0);
+    const remain = total - usedSpecial;
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${e.empNo}</td>
+        <td>${e.name}</td>
+        <td>${e.hire}</td>
+        <td>${days} 天</td>
+        <td>${total} 小時</td>
+        <td>${usedSpecial} 小時</td>
+        <td>${remain} 小時</td>
+        <td>${totalUsed} 小時</td>
+      </tr>`;
+  });
+}
+
+function renderLeaves(){
+  const year = document.getElementById("year").value;
+  const tbody = document.getElementById("leaveTable");
+  tbody.innerHTML = "";
+
+  leaves
+    .filter(l=>l.date.startsWith(year))
+    .sort((a,b)=>b.date.localeCompare(a.date))
+    .forEach(l=>{
+      const emp = employees.find(e=>e.empNo===l.empNo);
+      tbody.innerHTML += `
+      <tr>
+        <td>${l.date}</td>
+        <td>${emp ? emp.name : l.empNo}</td>
+        <td>${l.type}</td>
+        <td>${l.hours}</td>
+        <td>${l.note || ""}</td>
+        <td><button class="danger" onclick="deleteLeave(${l.id})">刪除</button></td>
+      </tr>`;
+    });
+}
+
+renderAll();
+</script>
 
 </body>
 </html>
