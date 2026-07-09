@@ -154,3 +154,9 @@ GitHub：
 https://github.com/你的帳號
 
 2026
+# 🏖 Leave Management System
+
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![PySide6](https://img.shields.io/badge/PySide6-6.x-green)
+![SQLite](https://img.shields.io/badge/SQLite-3-blue)
+![License](https://img.shields.io/badge/License-MIT-orange)
