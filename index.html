@@ -1,162 +1,199 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>特休管理系統</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>特休 / 請假管理系統</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Microsoft JhengHei", Arial, sans-serif;
+      background: #f4f7fb;
+      color: #222;
+    }
 
-    <style>
-        body{
-            margin:0;
-            background:#f5f6fa;
-            font-family:"Microsoft JhengHei",sans-serif;
-        }
+    header {
+      background: linear-gradient(135deg, #1976d2, #0d47a1);
+      color: white;
+      text-align: center;
+      padding: 70px 20px;
+    }
 
-        header{
-            background:#1976D2;
-            color:white;
-            padding:25px;
-            text-align:center;
-        }
+    header h1 {
+      font-size: 42px;
+      margin-bottom: 15px;
+    }
 
-        .container{
-            max-width:1000px;
-            margin:30px auto;
-        }
+    header p {
+      font-size: 20px;
+      margin-bottom: 30px;
+    }
 
-        .card{
-            background:white;
-            border-radius:10px;
-            padding:25px;
-            box-shadow:0 2px 10px rgba(0,0,0,.15);
-            margin-bottom:20px;
-        }
+    .btn {
+      display: inline-block;
+      padding: 13px 26px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 6px;
+    }
 
-        h2{
-            margin-top:0;
-        }
+    .btn-download {
+      background: #fff;
+      color: #1976d2;
+    }
 
-        table{
-            width:100%;
-            border-collapse:collapse;
-        }
+    .btn-github {
+      background: #222;
+      color: #fff;
+    }
 
-        th{
-            background:#1976D2;
-            color:white;
-            padding:10px;
-        }
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
 
-        td{
-            border:1px solid #ddd;
-            padding:10px;
-            text-align:center;
-        }
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 30px;
+      margin-bottom: 28px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
 
-        .btn{
-            display:inline-block;
-            background:#1976D2;
-            color:white;
-            text-decoration:none;
-            padding:10px 20px;
-            border-radius:6px;
-            margin-top:15px;
-        }
+    h2 {
+      margin-top: 0;
+      color: #0d47a1;
+    }
 
-        footer{
-            text-align:center;
-            color:#777;
-            padding:20px;
-        }
-    </style>
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
 
+    .feature {
+      background: #eef5ff;
+      padding: 18px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    pre {
+      background: #111827;
+      color: #e5e7eb;
+      padding: 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-size: 15px;
+    }
+
+    .screenshots {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .shot {
+      border: 2px dashed #bbb;
+      border-radius: 12px;
+      height: 190px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #777;
+      background: #fafafa;
+    }
+
+    footer {
+      text-align: center;
+      color: #777;
+      padding: 30px;
+    }
+  </style>
 </head>
+
 <body>
 
 <header>
-    <h1>特休 / 請假管理系統</h1>
-    <p>Python + PySide6 + SQLite</p>
+  <h1>特休 / 請假管理系統</h1>
+  <p>Python + PySide6 + SQLite 桌面版系統</p>
+
+  <a class="btn btn-download" href="leave_gui_fixed.py" download>下載 Python 程式</a>
+  <a class="btn btn-github" href="https://github.com/yuyao62/leave-system" target="_blank">查看 GitHub</a>
 </header>
 
 <div class="container">
 
-    <div class="card">
-        <h2>系統特色</h2>
-
-        <ul>
-            <li>✔ 員工管理</li>
-            <li>✔ 特休自動計算</li>
-            <li>✔ 請假紀錄</li>
-            <li>✔ 剩餘特休統計</li>
-            <li>✔ SQLite資料庫</li>
-            <li>✔ PySide6桌面版</li>
-        </ul>
-
+  <section class="card">
+    <h2>系統特色</h2>
+    <div class="features">
+      <div class="feature">員工資料管理</div>
+      <div class="feature">特休自動計算</div>
+      <div class="feature">請假紀錄 Key in</div>
+      <div class="feature">已休 / 剩餘統計</div>
+      <div class="feature">SQLite 本機資料庫</div>
+      <div class="feature">Windows 視窗版介面</div>
     </div>
+  </section>
 
-    <div class="card">
+  <section class="card">
+    <h2>下載與執行方式</h2>
 
-        <h2>畫面預覽</h2>
+    <p>第一次使用請先安裝 PySide6：</p>
 
-        <table>
+    <pre>pip install PySide6</pre>
 
-            <tr>
-                <th>功能</th>
-                <th>說明</th>
-            </tr>
+    <p>下載程式後，在 CMD 執行：</p>
 
-            <tr>
-                <td>員工資料</td>
-                <td>新增、修改、刪除員工</td>
-            </tr>
+    <pre>python leave_gui_fixed.py</pre>
 
-            <tr>
-                <td>請假紀錄</td>
-                <td>新增、修改、刪除請假</td>
-            </tr>
+    <p>資料會自動儲存在同資料夾的：</p>
 
-            <tr>
-                <td>年度統計</td>
-                <td>自動計算給假、已休、剩餘</td>
-            </tr>
+    <pre>leave_system.db</pre>
+  </section>
 
-            <tr>
-                <td>SQLite</td>
-                <td>資料永久保存</td>
-            </tr>
+  <section class="card">
+    <h2>專案檔案建議放法</h2>
 
-        </table>
+    <pre>leave-system/
+├── index.html
+├── leave_gui_fixed.py
+├── README.md
+├── requirements.txt
+└── screenshots/
+    ├── main.png
+    ├── employee.png
+    └── summary.png</pre>
+  </section>
 
+  <section class="card">
+    <h2>畫面截圖</h2>
+
+    <div class="screenshots">
+      <div class="shot">請放 screenshots/main.png</div>
+      <div class="shot">請放 screenshots/employee.png</div>
+      <div class="shot">請放 screenshots/summary.png</div>
     </div>
+  </section>
 
-    <div class="card">
-
-        <h2>GitHub</h2>
-
-        <p>
-            專案使用 Python、PySide6、SQLite 開發，
-            後續將加入：
-        </p>
-
-        <ul>
-            <li>Excel匯出</li>
-            <li>勞基法特休規則</li>
-            <li>補休管理</li>
-            <li>登入權限</li>
-            <li>年度結轉</li>
-            <li>報表列印</li>
-        </ul>
-
-        <a class="btn" href="https://github.com/你的帳號/leave-system">
-            GitHub Repository
-        </a>
-
-    </div>
+  <section class="card">
+    <h2>後續規劃</h2>
+    <ul>
+      <li>Excel 匯出</li>
+      <li>Excel 匯入員工資料</li>
+      <li>特休到期提醒</li>
+      <li>補休管理</li>
+      <li>報表列印</li>
+      <li>打包成 EXE</li>
+    </ul>
+  </section>
 
 </div>
 
 <footer>
-© 2026 Leave Management System
+  © 2026 Leave Management System
 </footer>
 
 </body>
