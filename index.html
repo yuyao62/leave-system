@@ -2,122 +2,356 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>特休 / 請假管理系統</title>
+
 <style>
-body{font-family:"Microsoft JhengHei",Arial;background:#f4f7fb;margin:0;color:#222}
-header{background:#1976d2;color:white;padding:30px;text-align:center}
-.container{max-width:1200px;margin:25px auto;padding:0 20px}
-.card{background:white;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 3px 12px #0002}
-input,select,button{padding:8px;margin:4px}
-button{background:#1976d2;color:white;border:0;border-radius:5px;cursor:pointer}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Microsoft JhengHei",Arial,sans-serif;
+  background:#f3f6fb;
+  color:#222;
+}
+.app{display:flex;min-height:100vh}
+.sidebar{
+  width:230px;
+  background:#0d47a1;
+  color:white;
+  padding:20px 12px;
+}
+.logo{
+  font-size:22px;
+  font-weight:bold;
+  text-align:center;
+  margin-bottom:25px;
+}
+.menu button{
+  width:100%;
+  padding:13px;
+  margin-bottom:8px;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:white;
+  text-align:left;
+  font-size:16px;
+  cursor:pointer;
+}
+.menu button.active,.menu button:hover{background:#1976d2}
+.main{flex:1;padding:24px}
+.topbar{
+  background:white;
+  padding:18px 22px;
+  border-radius:14px;
+  box-shadow:0 3px 12px #0001;
+  margin-bottom:20px;
+}
+.page{display:none}
+.page.active{display:block}
+.card{
+  background:white;
+  border-radius:14px;
+  padding:22px;
+  box-shadow:0 3px 12px #0002;
+  margin-bottom:20px;
+}
+h1,h2{margin-top:0}
+input,select,button{
+  padding:9px;
+  margin:4px;
+  font-size:15px;
+}
+button{
+  background:#1976d2;
+  color:white;
+  border:0;
+  border-radius:6px;
+  cursor:pointer;
+}
 button.danger{background:#c62828}
-table{width:100%;border-collapse:collapse;margin-top:10px}
-th{background:#1976d2;color:white}
-th,td{border:1px solid #ddd;padding:8px;text-align:center}
+button.gray{background:#607d8b}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:12px;
+  background:white;
+}
+th{
+  background:#1976d2;
+  color:white;
+}
+th,td{
+  border:1px solid #ddd;
+  padding:9px;
+  text-align:center;
+}
+.dashboard{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:18px;
+}
+.stat{
+  background:white;
+  border-radius:14px;
+  padding:24px;
+  box-shadow:0 3px 12px #0002;
+}
+.stat .num{
+  font-size:32px;
+  font-weight:bold;
+  color:#1976d2;
+}
+.form-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.small{color:#777;font-size:14px}
 </style>
 </head>
+
 <body>
 
-<header>
-<h1>特休 / 請假管理系統</h1>
-<p>GitHub Pages 網頁版，可直接使用</p>
-</header>
+<div class="app">
 
-<div class="container">
+  <aside class="sidebar">
+    <div class="logo">特休系統</div>
 
-<div class="card">
-<h2>員工資料</h2>
-<input id="empNo" placeholder="員工編號">
-<input id="empName" placeholder="姓名">
-<label>到職日</label>
-<input id="hireDate" type="date">
-<button onclick="saveEmployee()">新增 / 更新員工</button>
+    <div class="menu">
+      <button class="active" onclick="showPage('dashboard',this)">🏠 首頁</button>
+      <button onclick="showPage('employees',this)">👤 員工管理</button>
+      <button onclick="showPage('grants',this)">📅 特休發給</button>
+      <button onclick="showPage('leaves',this)">📝 請假管理</button>
+      <button onclick="showPage('summary',this)">📊 年度統計</button>
+      <button onclick="showPage('settings',this)">⚙ 系統設定</button>
+    </div>
+  </aside>
 
-<table>
-<thead>
-<tr><th>員編</th><th>姓名</th><th>到職日</th><th>操作</th></tr>
-</thead>
-<tbody id="empTable"></tbody>
-</table>
-</div>
+  <main class="main">
 
-<div class="card">
-<h2>請假 Key in</h2>
-<select id="leaveEmp"></select>
-<input id="leaveDate" type="date">
-<select id="leaveType">
-<option>特休</option>
-<option>補休</option>
-<option>病假</option>
-<option>事假</option>
-<option>家庭照顧假</option>
-<option>喪假</option>
-<option>婚假</option>
-<option>公假</option>
-<option>其他</option>
-</select>
-<input id="leaveHours" type="number" step="0.5" value="8">
-<input id="leaveNote" placeholder="備註">
-<button onclick="addLeave()">新增請假</button>
-</div>
+    <div class="topbar">
+      <h1>特休 / 請假管理系統</h1>
+      <div class="small">GitHub Pages 網頁版，資料儲存在此瀏覽器 localStorage</div>
+    </div>
 
-<div class="card">
-<h2>年度統計</h2>
-<label>年度</label>
-<input id="year" type="number" value="2026" onchange="renderAll()">
-<table>
-<thead>
-<tr>
-<th>員編</th><th>姓名</th><th>到職日</th><th>給假</th>
-<th>給假時數</th><th>已休特休</th><th>剩餘特休</th><th>總請假</th>
-</tr>
-</thead>
-<tbody id="summaryTable"></tbody>
-</table>
-</div>
+    <!-- 首頁 -->
+    <section id="dashboard" class="page active">
+      <div class="dashboard">
+        <div class="stat">
+          <div>員工人數</div>
+          <div class="num" id="dashEmp">0</div>
+        </div>
+        <div class="stat">
+          <div>今年給假時數</div>
+          <div class="num" id="dashGrant">0</div>
+        </div>
+        <div class="stat">
+          <div>今年已休特休</div>
+          <div class="num" id="dashUsed">0</div>
+        </div>
+        <div class="stat">
+          <div>今年剩餘特休</div>
+          <div class="num" id="dashRemain">0</div>
+        </div>
+      </div>
+    </section>
 
-<div class="card">
-<h2>請假明細</h2>
-<table>
-<thead>
-<tr><th>日期</th><th>員工</th><th>假別</th><th>時數</th><th>備註</th><th>操作</th></tr>
-</thead>
-<tbody id="leaveTable"></tbody>
-</table>
-</div>
+    <!-- 員工管理 -->
+    <section id="employees" class="page">
+      <div class="card">
+        <h2>員工管理</h2>
 
+        <div class="form-row">
+          <input id="empNo" placeholder="員工編號">
+          <input id="empName" placeholder="姓名">
+          <label>到職日</label>
+          <input id="hireDate" type="date">
+          <button onclick="saveEmployee()">新增 / 更新員工</button>
+          <button class="gray" onclick="clearEmployeeForm()">清空</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>員編</th>
+              <th>姓名</th>
+              <th>到職日</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="empTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 特休發給 -->
+    <section id="grants" class="page">
+      <div class="card">
+        <h2>特休發給</h2>
+
+        <div class="form-row">
+          <select id="grantEmp"></select>
+          <input id="grantYear" type="number" placeholder="年度">
+          <label>發給日期</label>
+          <input id="grantDate" type="date">
+          <label>有效起日</label>
+          <input id="validFrom" type="date">
+          <label>有效迄日</label>
+          <input id="validTo" type="date">
+          <input id="grantDays" type="number" step="0.5" placeholder="天數">
+          <input id="grantHours" type="number" step="0.5" placeholder="時數">
+          <button onclick="saveGrant()">新增發給</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>員工</th>
+              <th>年度</th>
+              <th>發給日期</th>
+              <th>有效起</th>
+              <th>有效迄</th>
+              <th>天數</th>
+              <th>時數</th>
+              <th>已休</th>
+              <th>剩餘</th>
+              <th>狀態</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="grantTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 請假管理 -->
+    <section id="leaves" class="page">
+      <div class="card">
+        <h2>請假管理</h2>
+
+        <div class="form-row">
+          <select id="leaveEmp"></select>
+          <label>日期</label>
+          <input id="leaveDate" type="date">
+          <select id="leaveType">
+            <option>特休</option>
+            <option>補休</option>
+            <option>病假</option>
+            <option>事假</option>
+            <option>家庭照顧假</option>
+            <option>喪假</option>
+            <option>婚假</option>
+            <option>公假</option>
+            <option>其他</option>
+          </select>
+          <input id="leaveHours" type="number" step="0.5" value="8" placeholder="時數">
+          <input id="leaveNote" placeholder="備註">
+          <button onclick="saveLeave()">新增請假</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>員工</th>
+              <th>假別</th>
+              <th>時數</th>
+              <th>備註</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="leaveTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 年度統計 -->
+    <section id="summary" class="page">
+      <div class="card">
+        <h2>年度統計</h2>
+
+        <div class="form-row">
+          <label>年度</label>
+          <input id="summaryYear" type="number" onchange="renderAll()">
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>員編</th>
+              <th>姓名</th>
+              <th>到職日</th>
+              <th>給假時數</th>
+              <th>已休特休</th>
+              <th>剩餘特休</th>
+              <th>總請假</th>
+            </tr>
+          </thead>
+          <tbody id="summaryTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 設定 -->
+    <section id="settings" class="page">
+      <div class="card">
+        <h2>系統設定</h2>
+
+        <div class="form-row">
+          <label>每日工時</label>
+          <input id="workHours" type="number" step="0.5">
+          <button onclick="saveSettings()">儲存設定</button>
+        </div>
+
+        <hr>
+
+        <button class="danger" onclick="clearAllData()">清除所有資料</button>
+        <p class="small">注意：資料存在目前瀏覽器，清除後無法復原。</p>
+      </div>
+    </section>
+
+  </main>
 </div>
 
 <script>
 let employees = JSON.parse(localStorage.getItem("employees") || "[]");
+let grants = JSON.parse(localStorage.getItem("grants") || "[]");
 let leaves = JSON.parse(localStorage.getItem("leaves") || "[]");
+let settings = JSON.parse(localStorage.getItem("settings") || '{"workHours":8}');
 
-document.getElementById("hireDate").valueAsDate = new Date();
-document.getElementById("leaveDate").valueAsDate = new Date();
+const today = new Date().toISOString().slice(0,10);
+const thisYear = new Date().getFullYear();
+
+document.getElementById("hireDate").value = today;
+document.getElementById("grantDate").value = today;
+document.getElementById("validFrom").value = today;
+document.getElementById("validTo").value = thisYear + "-12-31";
+document.getElementById("leaveDate").value = today;
+document.getElementById("grantYear").value = thisYear;
+document.getElementById("summaryYear").value = thisYear;
+document.getElementById("workHours").value = settings.workHours || 8;
 
 function saveData(){
   localStorage.setItem("employees", JSON.stringify(employees));
+  localStorage.setItem("grants", JSON.stringify(grants));
   localStorage.setItem("leaves", JSON.stringify(leaves));
+  localStorage.setItem("settings", JSON.stringify(settings));
 }
 
-function annualDays(hireDate, year){
-  const hire = new Date(hireDate);
-  const target = new Date(year,0,1);
-  let y = target.getFullYear() - hire.getFullYear();
-  if(target.getMonth() < hire.getMonth() ||
-    (target.getMonth() === hire.getMonth() && target.getDate() < hire.getDate())) y--;
+function showPage(id, btn){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 
-  if(y < 0) return 0;
-  if(y < 1) return 3;
-  if(y < 2) return 7;
-  if(y < 3) return 10;
-  if(y < 5) return 14;
-  if(y < 10) return 15;
-  return Math.min(30, 15 + (y - 10));
+  document.querySelectorAll(".menu button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+
+  renderAll();
+}
+
+function empName(empNo){
+  const e = employees.find(x=>x.empNo===empNo);
+  return e ? `${e.empNo} - ${e.name}` : empNo;
 }
 
 function saveEmployee(){
-  const empNo = empNoInput();
+  const empNo = document.getElementById("empNo").value.trim();
   const name = document.getElementById("empName").value.trim();
   const hire = document.getElementById("hireDate").value;
 
@@ -126,28 +360,80 @@ function saveEmployee(){
     return;
   }
 
-  const idx = employees.findIndex(e => e.empNo === empNo);
-  const data = {empNo, name, hire};
+  const idx = employees.findIndex(e=>e.empNo===empNo);
+  const data = {empNo,name,hire};
+
   if(idx >= 0) employees[idx] = data;
   else employees.push(data);
 
   saveData();
+  clearEmployeeForm();
   renderAll();
 }
 
-function empNoInput(){
-  return document.getElementById("empNo").value.trim();
+function editEmployee(empNo){
+  const e = employees.find(x=>x.empNo===empNo);
+  if(!e) return;
+  document.getElementById("empNo").value = e.empNo;
+  document.getElementById("empName").value = e.name;
+  document.getElementById("hireDate").value = e.hire;
 }
 
 function deleteEmployee(empNo){
-  if(!confirm("確定刪除員工？請假紀錄也會刪除。")) return;
-  employees = employees.filter(e => e.empNo !== empNo);
-  leaves = leaves.filter(l => l.empNo !== empNo);
+  if(!confirm("確定刪除此員工？相關發給與請假紀錄也會刪除。")) return;
+  employees = employees.filter(e=>e.empNo!==empNo);
+  grants = grants.filter(g=>g.empNo!==empNo);
+  leaves = leaves.filter(l=>l.empNo!==empNo);
   saveData();
   renderAll();
 }
 
-function addLeave(){
+function clearEmployeeForm(){
+  document.getElementById("empNo").value = "";
+  document.getElementById("empName").value = "";
+  document.getElementById("hireDate").value = today;
+}
+
+function saveGrant(){
+  const empNo = document.getElementById("grantEmp").value;
+  const year = document.getElementById("grantYear").value;
+  const grantDate = document.getElementById("grantDate").value;
+  const validFrom = document.getElementById("validFrom").value;
+  const validTo = document.getElementById("validTo").value;
+  const days = parseFloat(document.getElementById("grantDays").value || 0);
+  let hours = parseFloat(document.getElementById("grantHours").value || 0);
+
+  if(!empNo || !year || !grantDate || !validFrom || !validTo){
+    alert("請輸入完整特休發給資料");
+    return;
+  }
+
+  if(days <= 0 && hours <= 0){
+    alert("請輸入天數或時數");
+    return;
+  }
+
+  if(hours <= 0) hours = days * (settings.workHours || 8);
+
+  grants.push({
+    id: Date.now(),
+    empNo, year, grantDate, validFrom, validTo,
+    days: days || hours / (settings.workHours || 8),
+    hours
+  });
+
+  saveData();
+  renderAll();
+}
+
+function deleteGrant(id){
+  if(!confirm("確定刪除此筆特休發給？")) return;
+  grants = grants.filter(g=>g.id!==id);
+  saveData();
+  renderAll();
+}
+
+function saveLeave(){
   const empNo = document.getElementById("leaveEmp").value;
   const date = document.getElementById("leaveDate").value;
   const type = document.getElementById("leaveType").value;
@@ -155,27 +441,37 @@ function addLeave(){
   const note = document.getElementById("leaveNote").value.trim();
 
   if(!empNo || !date || hours <= 0){
-    alert("請選員工、日期、時數");
+    alert("請選擇員工、日期並輸入時數");
     return;
   }
 
-  leaves.push({id:Date.now(), empNo, date, type, hours, note});
+  leaves.push({
+    id: Date.now(),
+    empNo,date,type,hours,note
+  });
+
   document.getElementById("leaveNote").value = "";
   saveData();
   renderAll();
 }
 
 function deleteLeave(id){
-  leaves = leaves.filter(l => l.id !== id);
+  if(!confirm("確定刪除這筆請假紀錄？")) return;
+  leaves = leaves.filter(l=>l.id!==id);
   saveData();
   renderAll();
 }
 
-function renderAll(){
-  renderEmployees();
-  renderLeaveSelect();
-  renderSummary();
-  renderLeaves();
+function usedAnnual(empNo, year){
+  return leaves
+    .filter(l=>l.empNo===empNo && l.type==="特休" && l.date.startsWith(year))
+    .reduce((s,l)=>s+l.hours,0);
+}
+
+function totalLeave(empNo, year){
+  return leaves
+    .filter(l=>l.empNo===empNo && l.date.startsWith(year))
+    .reduce((s,l)=>s+l.hours,0);
 }
 
 function renderEmployees(){
@@ -196,70 +492,135 @@ function renderEmployees(){
   });
 }
 
-function editEmployee(empNo){
-  const e = employees.find(x=>x.empNo===empNo);
-  if(!e) return;
-  document.getElementById("empNo").value = e.empNo;
-  document.getElementById("empName").value = e.name;
-  document.getElementById("hireDate").value = e.hire;
-}
+function renderSelects(){
+  const grantEmp = document.getElementById("grantEmp");
+  const leaveEmp = document.getElementById("leaveEmp");
 
-function renderLeaveSelect(){
-  const sel = document.getElementById("leaveEmp");
-  sel.innerHTML = "";
+  grantEmp.innerHTML = "";
+  leaveEmp.innerHTML = "";
+
   employees.forEach(e=>{
-    sel.innerHTML += `<option value="${e.empNo}">${e.empNo} - ${e.name}</option>`;
+    grantEmp.innerHTML += `<option value="${e.empNo}">${e.empNo} - ${e.name}</option>`;
+    leaveEmp.innerHTML += `<option value="${e.empNo}">${e.empNo} - ${e.name}</option>`;
   });
 }
 
-function renderSummary(){
-  const year = parseInt(document.getElementById("year").value);
-  const tbody = document.getElementById("summaryTable");
+function renderGrants(){
+  const tbody = document.getElementById("grantTable");
   tbody.innerHTML = "";
 
-  employees.forEach(e=>{
-    const days = annualDays(e.hire, year);
-    const total = days * 8;
+  grants
+    .sort((a,b)=>b.year-a.year)
+    .forEach(g=>{
+      const used = usedAnnual(g.empNo, g.year);
+      const remain = g.hours - used;
+      const expired = new Date(g.validTo) < new Date(today);
 
-    const yearLeaves = leaves.filter(l=>l.empNo===e.empNo && l.date.startsWith(year));
-    const usedSpecial = yearLeaves.filter(l=>l.type==="特休").reduce((s,l)=>s+l.hours,0);
-    const totalUsed = yearLeaves.reduce((s,l)=>s+l.hours,0);
-    const remain = total - usedSpecial;
-
-    tbody.innerHTML += `
+      tbody.innerHTML += `
       <tr>
-        <td>${e.empNo}</td>
-        <td>${e.name}</td>
-        <td>${e.hire}</td>
-        <td>${days} 天</td>
-        <td>${total} 小時</td>
-        <td>${usedSpecial} 小時</td>
-        <td>${remain} 小時</td>
-        <td>${totalUsed} 小時</td>
+        <td>${empName(g.empNo)}</td>
+        <td>${g.year}</td>
+        <td>${g.grantDate}</td>
+        <td>${g.validFrom}</td>
+        <td>${g.validTo}</td>
+        <td>${g.days}</td>
+        <td>${g.hours}</td>
+        <td>${used}</td>
+        <td>${remain}</td>
+        <td>${expired ? "已到期" : "有效"}</td>
+        <td><button class="danger" onclick="deleteGrant(${g.id})">刪除</button></td>
       </tr>`;
-  });
+    });
 }
 
 function renderLeaves(){
-  const year = document.getElementById("year").value;
   const tbody = document.getElementById("leaveTable");
   tbody.innerHTML = "";
 
   leaves
-    .filter(l=>l.date.startsWith(year))
     .sort((a,b)=>b.date.localeCompare(a.date))
     .forEach(l=>{
-      const emp = employees.find(e=>e.empNo===l.empNo);
       tbody.innerHTML += `
       <tr>
         <td>${l.date}</td>
-        <td>${emp ? emp.name : l.empNo}</td>
+        <td>${empName(l.empNo)}</td>
         <td>${l.type}</td>
         <td>${l.hours}</td>
         <td>${l.note || ""}</td>
         <td><button class="danger" onclick="deleteLeave(${l.id})">刪除</button></td>
       </tr>`;
     });
+}
+
+function renderSummary(){
+  const year = String(document.getElementById("summaryYear").value);
+  const tbody = document.getElementById("summaryTable");
+  tbody.innerHTML = "";
+
+  employees.forEach(e=>{
+    const grantHours = grants
+      .filter(g=>g.empNo===e.empNo && String(g.year)===year)
+      .reduce((s,g)=>s+g.hours,0);
+
+    const used = usedAnnual(e.empNo, year);
+    const total = totalLeave(e.empNo, year);
+    const remain = grantHours - used;
+
+    tbody.innerHTML += `
+    <tr>
+      <td>${e.empNo}</td>
+      <td>${e.name}</td>
+      <td>${e.hire}</td>
+      <td>${grantHours}</td>
+      <td>${used}</td>
+      <td>${remain}</td>
+      <td>${total}</td>
+    </tr>`;
+  });
+}
+
+function renderDashboard(){
+  const year = String(thisYear);
+
+  const grantHours = grants
+    .filter(g=>String(g.year)===year)
+    .reduce((s,g)=>s+g.hours,0);
+
+  const used = leaves
+    .filter(l=>l.type==="特休" && l.date.startsWith(year))
+    .reduce((s,l)=>s+l.hours,0);
+
+  document.getElementById("dashEmp").innerText = employees.length;
+  document.getElementById("dashGrant").innerText = grantHours;
+  document.getElementById("dashUsed").innerText = used;
+  document.getElementById("dashRemain").innerText = grantHours - used;
+}
+
+function saveSettings(){
+  settings.workHours = parseFloat(document.getElementById("workHours").value || 8);
+  saveData();
+  alert("設定已儲存");
+  renderAll();
+}
+
+function clearAllData(){
+  if(!confirm("確定清除所有資料？")) return;
+  if(!confirm("再次確認，清除後無法復原。")) return;
+
+  employees = [];
+  grants = [];
+  leaves = [];
+  saveData();
+  renderAll();
+}
+
+function renderAll(){
+  renderEmployees();
+  renderSelects();
+  renderGrants();
+  renderLeaves();
+  renderSummary();
+  renderDashboard();
 }
 
 renderAll();
