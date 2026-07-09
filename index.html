@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特休管理系統</title>
+
+    <style>
+        body{
+            margin:0;
+            background:#f5f6fa;
+            font-family:"Microsoft JhengHei",sans-serif;
+        }
+
+        header{
+            background:#1976D2;
+            color:white;
+            padding:25px;
+            text-align:center;
+        }
+
+        .container{
+            max-width:1000px;
+            margin:30px auto;
+        }
+
+        .card{
+            background:white;
+            border-radius:10px;
+            padding:25px;
+            box-shadow:0 2px 10px rgba(0,0,0,.15);
+            margin-bottom:20px;
+        }
+
+        h2{
+            margin-top:0;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th{
+            background:#1976D2;
+            color:white;
+            padding:10px;
+        }
+
+        td{
+            border:1px solid #ddd;
+            padding:10px;
+            text-align:center;
+        }
+
+        .btn{
+            display:inline-block;
+            background:#1976D2;
+            color:white;
+            text-decoration:none;
+            padding:10px 20px;
+            border-radius:6px;
+            margin-top:15px;
+        }
+
+        footer{
+            text-align:center;
+            color:#777;
+            padding:20px;
+        }
+    </style>
+
+</head>
+<body>
+
+<header>
+    <h1>特休 / 請假管理系統</h1>
+    <p>Python + PySide6 + SQLite</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>系統特色</h2>
+
+        <ul>
+            <li>✔ 員工管理</li>
+            <li>✔ 特休自動計算</li>
+            <li>✔ 請假紀錄</li>
+            <li>✔ 剩餘特休統計</li>
+            <li>✔ SQLite資料庫</li>
+            <li>✔ PySide6桌面版</li>
+        </ul>
+
+    </div>
+
+    <div class="card">
+
+        <h2>畫面預覽</h2>
+
+        <table>
+
+            <tr>
+                <th>功能</th>
+                <th>說明</th>
+            </tr>
+
+            <tr>
+                <td>員工資料</td>
+                <td>新增、修改、刪除員工</td>
+            </tr>
+
+            <tr>
+                <td>請假紀錄</td>
+                <td>新增、修改、刪除請假</td>
+            </tr>
+
+            <tr>
+                <td>年度統計</td>
+                <td>自動計算給假、已休、剩餘</td>
+            </tr>
+
+            <tr>
+                <td>SQLite</td>
+                <td>資料永久保存</td>
+            </tr>
+
+        </table>
+
+    </div>
+
+    <div class="card">
+
+        <h2>GitHub</h2>
+
+        <p>
+            專案使用 Python、PySide6、SQLite 開發，
+            後續將加入：
+        </p>
+
+        <ul>
+            <li>Excel匯出</li>
+            <li>勞基法特休規則</li>
+            <li>補休管理</li>
+            <li>登入權限</li>
+            <li>年度結轉</li>
+            <li>報表列印</li>
+        </ul>
+
+        <a class="btn" href="https://github.com/你的帳號/leave-system">
+            GitHub Repository
+        </a>
+
+    </div>
+
+</div>
+
+<footer>
+© 2026 Leave Management System
+</footer>
+
+</body>
+</html>
